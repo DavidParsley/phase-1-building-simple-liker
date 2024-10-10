@@ -1,0 +1,39 @@
+const hide = document.getElementById("modal");
+hide.classList.add("hidden"); // Initially hide the modal
+
+// Function to handle like button clicks
+function likeClick(like) {
+  like.addEventListener("click", (e) => {
+      // Check if the heart is empty
+      if (like.querySelector(".like-glyph").textContent === EMPTY_HEART) {
+          // Attempt to mimic server call
+          mimicServerCall()
+              .then(() => {
+                  // On success, change heart to full
+                  like.querySelector(".like-glyph").textContent = FULL_HEART;
+                  like.querySelector(".like-glyph").classList.add("activated-heart"); // Add class for styling
+              })
+              .catch((error) => {
+                  // On failure, show the error modal
+                  const errorMessage = document.getElementById("modal-message");
+                  errorMessage.textContent = error;
+                  hide.classList.remove("hidden"); // Show the modal
+                  
+                  // Hide the modal after 3 seconds
+                  setTimeout(() => {
+                      hide.classList.add("hidden");
+                  }, 3000);
+              });
+      } else {
+          // If the heart is full, change back to empty heart
+          like.querySelector(".like-glyph").textContent = EMPTY_HEART;
+          like.querySelector(".like-glyph").classList.remove("activated-heart"); // Remove styling class
+      }
+  });
+}
+
+// Select all like buttons and attach the event listeners
+const likeButtons = document.querySelectorAll(".like");
+likeButtons.forEach(button => {
+  likeClick(button);
+});
